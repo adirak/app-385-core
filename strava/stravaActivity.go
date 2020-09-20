@@ -32,7 +32,7 @@ func doLoadStravaActivity(token data.StravaUserToken, app data.StravaApp, reTry 
 
 	// Check expired time
 	curTime := time.Now()
-	oldTime := token.ExpiredAt
+	oldTime := token.TokenExpiredAt
 
 	if (curTime.After(oldTime) || fourceRefresh) && reTry <= maxRetry {
 		rToken, err = RefreshStravaToken(token, app)

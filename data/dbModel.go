@@ -5,16 +5,16 @@ import "time"
 
 // StravaUserToken is data from strava_user_token table
 type StravaUserToken struct {
-	UserID       string    `json:"userId"`
-	StravaUserID int64     `json:"stravaUserId"`
-	AppID        int64     `json:"appId"`
-	Token        string    `json:"token"`
-	RefreshToken string    `json:"refreshToken"`
-	Active       bool      `json:"active"`
-	CreatedDate  time.Time `json:"createdDate"`
-	UpdatedDate  time.Time `json:"updatedDate"`
-	ExpiredAt    time.Time `json:"expiredAt"`
-	ExpiredIn    int64     `json:"expiredIn"`
+	UserID         string    `json:"userId"`
+	StravaUserID   int64     `json:"stravaUserId"`
+	AppID          int64     `json:"appId"`
+	Token          string    `json:"token"`
+	RefreshToken   string    `json:"refreshToken"`
+	Active         bool      `json:"active"`
+	CreatedDate    time.Time `json:"createdDate"`
+	UpdatedDate    time.Time `json:"updatedDate"`
+	TokenExpiredAt time.Time `json:"tokenExpiredAt"`
+	TokenExpiredIn int64     `json:"tokenExpiredIn"`
 }
 
 // ActivityQueue is data from activity_queue table

@@ -81,6 +81,7 @@ func RefreshStravaToken(token data.StravaUserToken, app data.StravaApp) (result 
 				result.ExpiredAt = expiredAtTime
 				result.ExpiredIn = int64(expiredIn)
 				result.TokenExpired = false
+
 			}
 		}
 
