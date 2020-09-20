@@ -24,9 +24,9 @@ func GetMyClient() *http.Client {
 }
 
 // NewPostRequest is function to create Post request
-func NewPostRequest(url string, fromData url.Values) (*http.Request, error) {
+func NewPostRequest(url string, formData url.Values) (*http.Request, error) {
 
-	req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(fromData.Encode()))
+	req, err := http.NewRequest(http.MethodPost, url, strings.NewReader(formData.Encode()))
 
 	return req, err
 }

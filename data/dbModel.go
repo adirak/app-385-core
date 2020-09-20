@@ -13,6 +13,8 @@ type StravaUserToken struct {
 	Active       bool      `json:"active"`
 	CreatedDate  time.Time `json:"createdDate"`
 	UpdatedDate  time.Time `json:"updatedDate"`
+	ExpiredAt    time.Time `json:"expiredAt"`
+	ExpiredIn    int64     `json:"expiredIn"`
 }
 
 // ActivityQueue is data from activity_queue table
