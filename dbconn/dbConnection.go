@@ -7,8 +7,7 @@ import (
 	"log"
 
 	"github.com/adirak/app-385-core/data"
-	_ "github.com/jackc/pgx/stdlib"
-	//_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 // Config of this database app
