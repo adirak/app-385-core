@@ -8,9 +8,10 @@ type ReqtData struct {
 
 // RespData is data will response to frontend
 type RespData struct {
-	Code    int
-	Msg     string
-	Err     error
-	Success bool
-	OutData map[string]interface{}
+	Code              int
+	Msg               string
+	Err               error
+	Success           bool
+	OutData           map[string]interface{}
+	ForceResponseData interface{}
 }

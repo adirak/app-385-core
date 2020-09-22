@@ -2,6 +2,7 @@
 package dbexec
 
 import (
+	"errors"
 	"fmt"
 	"log"
 
@@ -58,4 +59,65 @@ func UpdateActivityQueue(actQueue data.ActivityQueue) (err error) {
 	}
 
 	return err
+}
+
+// InsertActivityQueue to insert data into activity queue
+func InsertActivityQueue(stravaID int64) (err error) {
+
+	// Create connection
+	conn, err := dbconn.GetConnectionPoolAppDB()
+
+	if err == nil {
+
+		// Check stravaID is active in queue
+		active := true
+		active, err = HasActiveStravaID(stravaID)
+
+		if active == false && err == nil {
+
+			// Insert webhook queue to database
+			// If strava_user_id is constrain
+			sqlInsert := "INSERT INTO activity_queue(strava_user_id) VALUES ($1)"
+
+			// Do execute
+			_, err = conn.Exec(sqlInsert, stravaID)
+
+		} else {
+			if err == nil {
+				err = errors.New("strava_user_id is active in queue already")
+			}
+		}
+
+	}
+
+	return err
+}
+
+// HasActiveStravaID is function queue and check active stravaId in queue
+func HasActiveStravaID(stravaID int64) (bool, error) {
+
+	conn, err := dbconn.GetConnectionPoolAppDB()
+
+	if err == nil {
+
+		rows, err2 := conn.Query(`SELECT COUNT(*) FROM activity_queue WHERE strava_user_id=$1 AND active=TRUE`, stravaID)
+		if err2 != nil {
+			return true, err2
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+
+			var count int
+			err = rows.Scan(&count)
+
+			if err == nil && count < 1 {
+				return false, nil
+			}
+		}
+
+	}
+
+	return true, err
+
 }

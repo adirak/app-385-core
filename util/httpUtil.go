@@ -57,22 +57,34 @@ func SetJSONResponse(respData data.RespData, w http.ResponseWriter) {
 	// Write Header
 	w.Header().Set("Content-Type", "application/json")
 
-	// Make Result data
-	response := make(map[string]interface{})
-	msgBody := getMessageBody(respData)
+	// Force response data if not nil
+	if respData.ForceResponseData != nil {
 
-	if respData.Success {
-		w.WriteHeader(http.StatusOK)
+		// Make Response JSON data
+		json.NewEncoder(w).Encode(respData.ForceResponseData)
+
 	} else {
-		w.WriteHeader(respData.Code)
+
+		// Make Result data
+		response := make(map[string]interface{})
+		msgBody := getMessageBody(respData)
+
+		if respData.Success {
+			w.WriteHeader(http.StatusOK)
+		} else {
+			w.WriteHeader(respData.Code)
+		}
+
+		// Set Response Data
 		response["data"] = respData.OutData
+
+		// Set Message Body
+		response["message"] = msgBody
+
+		// Make Response JSON data
+		json.NewEncoder(w).Encode(response)
+
 	}
-
-	// Set Message Body
-	response["message"] = msgBody
-
-	// Make Response JSON data
-	json.NewEncoder(w).Encode(response)
 }
 
 // getMessageBody is function to make message body
@@ -109,4 +121,40 @@ func getMessageBody(respData data.RespData) map[string]interface{} {
 	}
 
 	return msgBody
+}
+
+// GetRespDataFromResponse is function to convert response to RespData
+func GetRespDataFromResponse(resp *http.Response) (respData data.RespData, err error) {
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err == nil {
+		// Convert body to map
+		result := make(map[string]interface{})
+		err = json.Unmarshal(body, &result)
+
+		if err == nil {
+
+			dataX := result["data"]
+			messageX := result["message"]
+
+			if dataX != nil {
+				data := dataX.(map[string]interface{})
+				respData.OutData = data
+			}
+
+			if messageX != nil {
+				message := messageX.(map[string]interface{})
+				code := message["code"].(float64)
+				desc := message["desc"].(string)
+				respData.Code = int(code)
+				respData.Msg = desc
+				if code == 200 {
+					respData.Success = true
+				}
+
+			}
+		}
+	}
+
+	return respData, err
 }

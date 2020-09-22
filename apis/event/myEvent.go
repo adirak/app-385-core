@@ -4,10 +4,9 @@ package event
 import (
 	"log"
 
-	"github.com/adirak/app-385-core/util"
-
 	"github.com/adirak/app-385-core/data"
 	"github.com/adirak/app-385-core/dbexec"
+	"github.com/adirak/app-385-core/util"
 )
 
 // GetMyEvent is api function to list my events from database

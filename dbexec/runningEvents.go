@@ -2,6 +2,7 @@
 package dbexec
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -76,4 +77,31 @@ func LoadRunningEvent(myEvent data.MyEvent) (data.RunningEvent, error) {
 	}
 
 	return runEvent, err
+}
+
+// CreateRunningEvent is function to create running event
+func CreateRunningEvent(name string, data interface{}, active bool) error {
+
+	// Convert map to json
+	json, err1 := json.Marshal(data)
+
+	if err1 == nil {
+
+		// Create connection
+		conn, err := dbconn.GetConnectionPoolAppDB()
+
+		if err == nil {
+
+			sqlInsert := "INSERT INTO running_event(name, data, active) VALUES ($1, $2, $3)"
+
+			// Do execute
+			_, err = conn.Exec(sqlInsert, name, json, active)
+
+			err1 = err
+
+		}
+
+	}
+
+	return err1
 }

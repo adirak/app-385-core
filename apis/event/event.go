@@ -36,3 +36,26 @@ func GetEvents(reqt data.ReqtData) (resp data.RespData) {
 	resp.Err = err
 	return resp
 }
+
+// CreateEvent is api function to create running_event record
+func CreateEvent(reqt data.ReqtData) (resp data.RespData) {
+
+	// Output data
+	outData := make(map[string]interface{})
+
+	// Input data
+	inData := reqt.InData
+	name := inData["name"].(string)
+	active := inData["active"].(bool)
+	data := inData["data"]
+
+	err := dbexec.CreateRunningEvent(name, data, active)
+	if err == nil {
+		resp.Success = true
+	}
+
+	// Footer response
+	resp.OutData = outData
+	resp.Err = err
+	return resp
+}
