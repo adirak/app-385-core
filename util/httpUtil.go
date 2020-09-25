@@ -3,6 +3,7 @@ package util
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -157,4 +158,17 @@ func GetRespDataFromResponse(resp *http.Response) (respData data.RespData, err e
 	}
 
 	return respData, err
+}
+
+// SetBadRequestJSONResponse is function to make reponse bad request and return to frontend
+func SetBadRequestJSONResponse(err error, w http.ResponseWriter) {
+
+	// Request data is not corrected
+	// Make Response and return to frontend
+	resp := data.RespData{}
+	resp.Code = 400
+	resp.Msg = fmt.Sprint("Bad Request : ", err.Error())
+
+	// Response JSON data to frontend
+	SetJSONResponse(resp, w)
 }
