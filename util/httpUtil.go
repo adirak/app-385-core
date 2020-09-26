@@ -14,17 +14,23 @@ import (
 // GetReqtData is function to convert http.Request to ReqtData
 func GetReqtData(r *http.Request) (reqtData data.ReqtData, err error) {
 
+	// Request method
+	method := r.Method
+
 	// Make Input Json Data
 	var inData map[string]interface{}
-	err = json.NewDecoder(r.Body).Decode(&inData)
-	if err != nil {
-		reqBody, err1 := ioutil.ReadAll(r.Body)
-		if err1 == nil {
-			log.Println("Request body is not json : ", string(reqBody), "\nError : ", err.Error())
-		} else {
-			log.Println("Request body is not json : ", "\nError : ", err.Error())
-		}
 
+	// Convert JSON Body to map
+	if method == http.MethodPost {
+		err = json.NewDecoder(r.Body).Decode(&inData)
+		if err != nil {
+			reqBody, err1 := ioutil.ReadAll(r.Body)
+			if err1 == nil {
+				log.Println("Request body is not json : ", string(reqBody), "\nError : ", err.Error())
+			} else {
+				log.Println("Request body is not json : ", "\nError : ", err.Error())
+			}
+		}
 	}
 
 	// Make parameter from url request
