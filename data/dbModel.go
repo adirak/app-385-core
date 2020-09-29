@@ -75,3 +75,17 @@ type RunningEvent struct {
 	Name    string `json:"name"`
 	Data    string `json:"data"`
 }
+
+// RegisterLog is data from register_log table
+type RegisterLog struct {
+	RegisterLogID int64     `json:"registerLogId"`
+	UserID        string    `json:"userId"`
+	EventID       int64     `json:"eventId"`
+	UserInfo      string    `json:"userInfo"`
+	Address       string    `json:"address"`
+	Item          string    `json:"item"`
+	Step          int64     `json:"step"`
+	Active        bool      `json:"active"`
+	CreatedDate   time.Time `json:"createdDate"`
+	UpdatedDate   time.Time `json:"updatedDate"`
+}
