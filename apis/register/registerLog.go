@@ -110,7 +110,7 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 	return resp
 }
 
-// SetStepOfRegisterLog is function to set step in register_log table
+// SetStepOfRegisterLog is function to set step column in register_log table
 func SetStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 	// Output data
