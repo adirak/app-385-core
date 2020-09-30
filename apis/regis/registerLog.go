@@ -1,5 +1,5 @@
-// Package event contains an apis for Event data
-package event
+// Package regis contains an apis for Register data
+package regis
 
 import (
 	"encoding/json"
