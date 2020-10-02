@@ -190,7 +190,7 @@ func SetStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 }
 
-// LoadStepOfRegisterLog is function to load register log from db
+// LoadRegisterLog is function to load register log from db
 func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 	log.Println("LoadStepOfRegisterLog Start")
