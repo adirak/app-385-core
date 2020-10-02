@@ -189,3 +189,119 @@ func SetStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 	return resp
 
 }
+
+// LoadStepOfRegisterLog is function to load register log from db
+func LoadStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
+
+	log.Println("LoadStepOfRegisterLog Start")
+	defer log.Println("LoadStepOfRegisterLog End")
+
+	// Output data
+	outData := make(map[string]interface{})
+
+	// Input data
+	inData := reqt.InData
+	var err error
+
+	if inData != nil {
+
+		userID := inData["userId"]
+		eventID := inData["eventId"]
+
+		// Step description
+		// 1.userInfo 2.address 3.item 4.confirm 5.confirm role 6.payment
+		stepDesc := make(map[string]interface{})
+		stepDesc["1"] = "User Info Page"
+		stepDesc["2"] = "Address Page"
+		stepDesc["3"] = "Item Size Page"
+		stepDesc["4"] = "Confirm Page"
+		stepDesc["5"] = "Confirm Role Page"
+		stepDesc["6"] = "Page Page"
+		outData["stepDesc"] = stepDesc
+
+		if userID != nil && eventID != nil {
+
+			// Convert data
+			uID := userID.(string)
+			eID := int64(eventID.(float64))
+
+			// Load Register Log data
+			rLog, err2 := dbexec.LoadRegisterLog(uID, eID)
+			if err2 == nil {
+
+				step := rLog.Step
+				outData["userId"] = rLog.UserID
+				outData["eventId"] = rLog.EventID
+				outData["step"] = step
+
+				if step == 1 {
+
+					// User Info
+					mapData := make(map[string]interface{})
+					err = json.Unmarshal([]byte(rLog.UserInfo), &mapData)
+					if err == nil {
+						outData["userInfo"] = mapData
+					}
+
+				} else if step == 2 {
+
+					// Address
+					mapData := make(map[string]interface{})
+					err = json.Unmarshal([]byte(rLog.Address), &mapData)
+					if err == nil {
+						outData["address"] = mapData
+					}
+
+				} else if step == 3 {
+
+					// Item
+					mapData := make(map[string]interface{})
+					err = json.Unmarshal([]byte(rLog.Item), &mapData)
+					if err == nil {
+						outData["item"] = mapData
+					}
+
+				} else if step == 4 {
+
+					// Confirm
+					// TODO
+					mapData := make(map[string]interface{})
+					mapData["summarry"] = "No implement yet"
+
+				} else if step == 5 {
+
+					// Confirm
+					// TODO
+					mapData := make(map[string]interface{})
+					mapData["role"] = "No implement yet"
+
+				} else if step == 6 {
+
+					// Confirm
+					// TODO
+					mapData := make(map[string]interface{})
+					mapData["payment"] = "No implement yet"
+
+				}
+
+			} else {
+				err = err2
+			}
+
+		} else {
+
+			resp.Msg = "Bad Request, userId or eventId or step is nil"
+			resp.Code = 400
+		}
+
+	} else {
+		resp.Msg = "Bad Request"
+		resp.Code = 400
+	}
+
+	// Footer response
+	resp.OutData = outData
+	resp.Err = err
+	return resp
+
+}
