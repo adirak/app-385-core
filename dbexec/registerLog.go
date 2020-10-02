@@ -36,6 +36,8 @@ func LoadRegisterLog(userID string, eventID int64) (result data.RegisterLog, err
 	conn, err := dbconn.GetConnectionPoolLogDB()
 	if err == nil {
 
+		result = data.RegisterLog{}
+
 		// Queue SQL
 		sqlQueue := `SELECT register_log_id, user_id, event_id, user_info, address, item, step, active FROM register_log WHERE user_id=$1 AND event_id=$2 AND active=TRUE`
 

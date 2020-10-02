@@ -193,8 +193,8 @@ func SetStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 // LoadRegisterLog is function to load register log from db
 func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
-	log.Println("LoadStepOfRegisterLog Start")
-	defer log.Println("LoadStepOfRegisterLog End")
+	log.Println("LoadRegisterLog Start")
+	defer log.Println("LoadRegisterLog End")
 
 	// Output data
 	outData := make(map[string]interface{})
