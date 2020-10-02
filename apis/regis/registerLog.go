@@ -34,26 +34,26 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 		if userID != nil && eventID != nil {
 
-			log.Println("Step 1")
+			//log.Println("Step 1")
 
 			// Convert data
 			uID := userID.(string)
 			eID := int64(eventID.(float64))
 
-			log.Println("Step 2")
+			//log.Println("Step 2")
 
 			// Load Register Log data
 			rLog, err2 := dbexec.LoadRegisterLog(uID, eID)
 			if err2 == nil {
 
-				log.Println("Step 3")
+				//log.Println("Step 3")
 
 				if rLog.RegisterLogID == 0 {
 
 					// Insert data to table because it is never create record
 					err = dbexec.InsertRegisterLog(uID, eID)
 
-					log.Println("Step 4")
+					//log.Println("Step 4")
 					if err == nil {
 
 						// Load Register Log data again
@@ -89,7 +89,7 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 						rLog.Step = int64(fStep)
 					}
 
-					log.Println("Step 5")
+					//log.Println("Step 5")
 
 					// Update Register Log
 					err = dbexec.UpdateRegisterLog(rLog)
@@ -97,7 +97,7 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 						resp.Success = true
 					}
 
-					log.Println("Step 6")
+					//log.Println("Step 6")
 
 				} else {
 					if err == nil {
@@ -162,6 +162,11 @@ func SetStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 					// Update step into database
 					err = dbexec.SetStepRegisterLog(rLog)
 
+					// Return success
+					if err == nil {
+						resp.Success = true
+					}
+
 				} else {
 					if err == nil {
 						err = errors.New("No register data in DB")
@@ -208,6 +213,8 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 		userID := inData["userId"]
 		eventID := inData["eventId"]
 
+		log.Println("Step 1")
+
 		// Step description
 		// 1.userInfo 2.address 3.item 4.confirm 5.confirm role 6.payment
 		stepDesc := make(map[string]interface{})
@@ -221,13 +228,19 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 		if userID != nil && eventID != nil {
 
+			log.Println("Step 2")
+
 			// Convert data
 			uID := userID.(string)
 			eID := int64(eventID.(float64))
 
+			log.Println("Step 2.5")
+
 			// Load Register Log data
 			rLog, err2 := dbexec.LoadRegisterLog(uID, eID)
 			if err2 == nil {
+
+				log.Println("Step 3")
 
 				step := rLog.Step
 				outData["userId"] = rLog.UserID
@@ -266,22 +279,34 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 					// Confirm
 					// TODO
 					mapData := make(map[string]interface{})
-					mapData["summarry"] = "No implement yet"
+					mapData["desc"] = "No implement yet"
+					outData["summarry"] = mapData
 
 				} else if step == 5 {
 
 					// Confirm
 					// TODO
 					mapData := make(map[string]interface{})
-					mapData["role"] = "No implement yet"
+					mapData["desc"] = "No implement yet"
+					outData["role"] = mapData
 
 				} else if step == 6 {
 
 					// Confirm
 					// TODO
 					mapData := make(map[string]interface{})
-					mapData["payment"] = "No implement yet"
+					mapData["desc"] = "No implement yet"
+					outData["payment"] = mapData
 
+				} else {
+					err = errors.New("step is not corrected")
+				}
+
+				log.Println("Step 4")
+
+				// Return Success
+				if err == nil {
+					resp.Success = true
 				}
 
 			} else {
