@@ -2,6 +2,8 @@
 package dbexec
 
 import (
+	"log"
+
 	"github.com/adirak/app-385-core/data"
 
 	"github.com/adirak/app-385-core/dbconn"
@@ -28,6 +30,8 @@ func InsertRegisterLog(userID string, eventID int64) (err error) {
 // LoadRegisterLog to query Register Log by userId and eventId
 func LoadRegisterLog(userID string, eventID int64) (result data.RegisterLog, err error) {
 
+	log.Println("userID=", userID, ", eventId=", eventID)
+
 	// create connection
 	conn, err := dbconn.GetConnectionPoolLogDB()
 	if err == nil {
@@ -44,7 +48,7 @@ func LoadRegisterLog(userID string, eventID int64) (result data.RegisterLog, err
 		defer rows.Close()
 
 		for rows.Next() {
-			err = rows.Scan(&result.RegisterLogID, &result.UserID, &result.EventID, &result.UserInfo, &result.Address, &result.Item, &result.Active)
+			err = rows.Scan(&result.RegisterLogID, &result.UserID, &result.EventID, &result.UserInfo, &result.Address, &result.Item, &result.Step, &result.Active)
 			break
 		}
 	}
