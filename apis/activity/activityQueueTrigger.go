@@ -12,6 +12,9 @@ import (
 // TriggerActivityQueue is api function to triger strava query from its api
 func TriggerActivityQueue(reqt data.ReqtData) (resp data.RespData) {
 
+	log.Println("TriggerActivityQueue Start")
+	defer log.Println("TriggerActivityQueue End")
+
 	// Output data
 	outData := make(map[string]interface{})
 

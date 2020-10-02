@@ -15,6 +15,9 @@ import (
 // StravaCallBack is api function for webhook of strava to call back
 func StravaCallBack(reqt data.ReqtData) (resp data.RespData) {
 
+	log.Println("StravaCallBack Start")
+	defer log.Println("StravaCallBack End")
+
 	// Output data
 	outData := make(map[string]interface{})
 

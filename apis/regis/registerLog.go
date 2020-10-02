@@ -4,6 +4,7 @@ package regis
 import (
 	"encoding/json"
 	"errors"
+	"log"
 
 	"github.com/adirak/app-385-core/data"
 	"github.com/adirak/app-385-core/dbexec"
@@ -11,6 +12,9 @@ import (
 
 // SaveRegisterLog is function to set data in register_log table
 func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
+
+	log.Println("SaveRegisterLog Start")
+	defer log.Println("SaveRegisterLog End")
 
 	// Output data
 	outData := make(map[string]interface{})
@@ -30,18 +34,26 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 		if userID != nil && eventID != nil {
 
+			log.Println("Step 1")
+
 			// Convert data
 			uID := userID.(string)
 			eID := int64(eventID.(float64))
+
+			log.Println("Step 2")
 
 			// Load Register Log data
 			rLog, err2 := dbexec.LoadRegisterLog(uID, eID)
 			if err2 == nil {
 
+				log.Println("Step 3")
+
 				if rLog.RegisterLogID == 0 {
 
 					// Insert data to table because it is never create record
 					err = dbexec.InsertRegisterLog(uID, eID)
+
+					log.Println("Step 4")
 					if err == nil {
 
 						// Load Register Log data again
@@ -77,11 +89,15 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 						rLog.Step = int64(fStep)
 					}
 
+					log.Println("Step 5")
+
 					// Update Register Log
 					err = dbexec.UpdateRegisterLog(rLog)
 					if err == nil {
 						resp.Success = true
 					}
+
+					log.Println("Step 6")
 
 				} else {
 					if err == nil {
@@ -112,6 +128,9 @@ func SaveRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 
 // SetStepOfRegisterLog is function to set step column in register_log table
 func SetStepOfRegisterLog(reqt data.ReqtData) (resp data.RespData) {
+
+	log.Println("SetStepOfRegisterLog Start")
+	defer log.Println("SetStepOfRegisterLog End")
 
 	// Output data
 	outData := make(map[string]interface{})

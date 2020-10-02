@@ -2,6 +2,8 @@
 package event
 
 import (
+	"log"
+
 	"github.com/adirak/app-385-core/data"
 	"github.com/adirak/app-385-core/dbexec"
 	"github.com/adirak/app-385-core/util"
@@ -9,6 +11,9 @@ import (
 
 // GetEvents is api function to list events from database
 func GetEvents(reqt data.ReqtData) (resp data.RespData) {
+
+	log.Println("GetEvents Start")
+	defer log.Println("GetEvents End")
 
 	// Output data
 	outData := make(map[string]interface{})
@@ -39,6 +44,9 @@ func GetEvents(reqt data.ReqtData) (resp data.RespData) {
 
 // CreateEvent is api function to create running_event record
 func CreateEvent(reqt data.ReqtData) (resp data.RespData) {
+
+	log.Println("CreateEvent Start")
+	defer log.Println("CreateEvent End")
 
 	// Output data
 	outData := make(map[string]interface{})

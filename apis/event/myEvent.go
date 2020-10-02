@@ -12,6 +12,9 @@ import (
 // GetMyEvent is api function to list my events from database
 func GetMyEvent(reqt data.ReqtData) (resp data.RespData) {
 
+	log.Println("GetMyEvent Start")
+	defer log.Println("GetMyEvent End")
+
 	// Output data
 	outData := make(map[string]interface{})
 

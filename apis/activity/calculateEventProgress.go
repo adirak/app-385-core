@@ -13,6 +13,9 @@ import (
 // calulateEventProgress is function to calulate EventProgross by activity
 func calulateEventProgress(actData map[string]interface{}, history data.StravaActivityHistory, token data.StravaUserToken) (updateCount int, err error) {
 
+	log.Println("**calulateEventProgress Start")
+	defer log.Println("**calulateEventProgress End")
+
 	activities, ok := actData["activities"].([]map[string]interface{})
 	updateCount = 0
 	if ok {
