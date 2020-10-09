@@ -21,7 +21,7 @@ func LoadRunningEvents() ([]data.RunningEvent, error) {
 
 	if err == nil {
 
-		sqlQuery := `SELECT event_id, name, data FROM running_event WHERE active=TRUE`
+		sqlQuery := `SELECT event_id, name, data, rule_id FROM running_event WHERE active=TRUE`
 
 		rows, err1 := conn.Query(sqlQuery)
 		if err1 != nil {
@@ -33,7 +33,7 @@ func LoadRunningEvents() ([]data.RunningEvent, error) {
 
 			runEvent := data.RunningEvent{}
 
-			err := rows.Scan(&runEvent.EventID, &runEvent.Name, &runEvent.Data)
+			err := rows.Scan(&runEvent.EventID, &runEvent.Name, &runEvent.Data, &runEvent.RuleID)
 			if err == nil {
 				events = append(events, runEvent)
 			} else {
@@ -56,7 +56,7 @@ func LoadRunningEvent(myEvent data.MyEvent) (data.RunningEvent, error) {
 
 	if err == nil {
 
-		sqlQuery := `SELECT event_id, name, data FROM running_event WHERE event_id=$1`
+		sqlQuery := `SELECT event_id, name, data, rule_id FROM running_event WHERE event_id=$1`
 
 		rows, err1 := conn.Query(sqlQuery, myEvent.EventID)
 		if err1 != nil {
@@ -66,7 +66,7 @@ func LoadRunningEvent(myEvent data.MyEvent) (data.RunningEvent, error) {
 
 		for rows.Next() {
 
-			err := rows.Scan(&runEvent.EventID, &runEvent.Name, &runEvent.Data)
+			err := rows.Scan(&runEvent.EventID, &runEvent.Name, &runEvent.Data, &runEvent.RuleID)
 			if err == nil {
 				break
 			} else {
@@ -79,8 +79,15 @@ func LoadRunningEvent(myEvent data.MyEvent) (data.RunningEvent, error) {
 	return runEvent, err
 }
 
+// LoadRunningEventByID is function to load runnint event by ID
+func LoadRunningEventByID(eventID int64) (data.RunningEvent, error) {
+	myEvent := data.MyEvent{}
+	myEvent.EventID = eventID
+	return LoadRunningEvent(myEvent)
+}
+
 // CreateRunningEvent is function to create running event
-func CreateRunningEvent(name string, data interface{}, active bool) error {
+func CreateRunningEvent(name string, data interface{}, active bool, ruleID int64) error {
 
 	// Convert map to json
 	json, err1 := json.Marshal(data)
@@ -92,10 +99,10 @@ func CreateRunningEvent(name string, data interface{}, active bool) error {
 
 		if err == nil {
 
-			sqlInsert := "INSERT INTO running_event(name, data, active) VALUES ($1, $2, $3)"
+			sqlInsert := "INSERT INTO running_event(name, data, active, rule_id) VALUES ($1, $2, $3, $4)"
 
 			// Do execute
-			_, err = conn.Exec(sqlInsert, name, json, active)
+			_, err = conn.Exec(sqlInsert, name, json, active, ruleID)
 
 			err1 = err
 

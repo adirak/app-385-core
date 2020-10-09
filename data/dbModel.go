@@ -74,6 +74,7 @@ type RunningEvent struct {
 	EventID int64  `json:"eventId"`
 	Name    string `json:"name"`
 	Data    string `json:"data"`
+	RuleID  int64  `json:"ruleId"`
 }
 
 // RegisterLog is data from register_log table
@@ -88,4 +89,13 @@ type RegisterLog struct {
 	Active        bool      `json:"active"`
 	CreatedDate   time.Time `json:"createdDate"`
 	UpdatedDate   time.Time `json:"updatedDate"`
+}
+
+// RuleFunction is data from running_event table
+type RuleFunction struct {
+	RuleID       int64     `json:"ruleId"`
+	FunctionName string    `json:"functionName"`
+	Description  string    `json:"description"`
+	CreatedDate  time.Time `json:"createdDate"`
+	UpdatedDate  time.Time `json:"updatedDate"`
 }

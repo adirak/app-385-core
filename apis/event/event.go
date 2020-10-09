@@ -56,8 +56,9 @@ func CreateEvent(reqt data.ReqtData) (resp data.RespData) {
 	name := inData["name"].(string)
 	active := inData["active"].(bool)
 	data := inData["data"]
+	ruleID := inData["ruleId"].(float64)
 
-	err := dbexec.CreateRunningEvent(name, data, active)
+	err := dbexec.CreateRunningEvent(name, data, active, int64(ruleID))
 	if err == nil {
 		resp.Success = true
 	}

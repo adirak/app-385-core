@@ -213,28 +213,22 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 		userID := inData["userId"]
 		eventID := inData["eventId"]
 
-		log.Println("Step 1")
-
 		// Step description
 		// 1.userInfo 2.address 3.item 4.confirm 5.confirm role 6.payment
 		stepDesc := make(map[string]interface{})
 		stepDesc["1"] = "User Info Page"
 		stepDesc["2"] = "Address Page"
 		stepDesc["3"] = "Item Size Page"
-		stepDesc["4"] = "Confirm Page"
-		stepDesc["5"] = "Confirm Role Page"
-		stepDesc["6"] = "Page Page"
+		stepDesc["4"] = "Confirm all steps and Role Page"
+		stepDesc["5"] = "Confirm Consent Page"
+		stepDesc["6"] = "Payment Page"
 		outData["stepDesc"] = stepDesc
 
 		if userID != nil && eventID != nil {
 
-			log.Println("Step 2")
-
 			// Convert data
 			uID := userID.(string)
 			eID := int64(eventID.(float64))
-
-			log.Println("Step 2.5")
 
 			// Load Register Log data
 			rLog, err2 := dbexec.LoadRegisterLog(uID, eID)
@@ -247,7 +241,8 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 				outData["eventId"] = rLog.EventID
 				outData["step"] = step
 
-				if step == 1 {
+				// User Info Page
+				if step == 1 || step == 4 {
 
 					// User Info
 					mapData := make(map[string]interface{})
@@ -256,7 +251,10 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 						outData["userInfo"] = mapData
 					}
 
-				} else if step == 2 {
+				}
+
+				// Address Page
+				if step == 2 || step == 4 {
 
 					// Address
 					mapData := make(map[string]interface{})
@@ -265,7 +263,10 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 						outData["address"] = mapData
 					}
 
-				} else if step == 3 {
+				}
+
+				// Item Size Page
+				if step == 3 || step == 4 {
 
 					// Item
 					mapData := make(map[string]interface{})
@@ -274,23 +275,46 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 						outData["item"] = mapData
 					}
 
-				} else if step == 4 {
+				}
 
-					// Confirm
-					// TODO
-					mapData := make(map[string]interface{})
-					mapData["desc"] = "No implement yet"
-					outData["summarry"] = mapData
+				// Confirm all steps and Role Page
+				if step == 4 {
 
-				} else if step == 5 {
+					runEvent, err2 := dbexec.LoadRunningEventByID(eID)
+					if err2 == nil {
+						ruleData, err3 := dbexec.LoadRuleFunction(runEvent.RuleID)
+						if err3 == nil {
+							outData["rule"] = ruleData
+						} else {
+							err = err3
+						}
+					} else {
+						err = err2
+					}
 
-					// Confirm
-					// TODO
-					mapData := make(map[string]interface{})
-					mapData["desc"] = "No implement yet"
-					outData["role"] = mapData
+				}
 
-				} else if step == 6 {
+				// Confirm Consent Page
+				if step == 5 {
+
+					runEvent, err2 := dbexec.LoadRunningEventByID(eID)
+					if err2 == nil {
+
+						mapData := make(map[string]interface{})
+						err = json.Unmarshal([]byte(runEvent.Data), &mapData)
+						if err == nil {
+							consent := mapData["consent"]
+							outData["consent"] = consent
+						}
+
+					} else {
+						err = err2
+					}
+
+				}
+
+				// Payment Page
+				if step == 6 {
 
 					// Confirm
 					// TODO
@@ -298,11 +322,12 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 					mapData["desc"] = "No implement yet"
 					outData["payment"] = mapData
 
-				} else {
-					err = errors.New("step is not corrected")
 				}
 
-				log.Println("Step 4")
+				// Unsupport Page
+				if step < 1 || step > 6 {
+					err = errors.New("step is not corrected")
+				}
 
 				// Return Success
 				if err == nil {
