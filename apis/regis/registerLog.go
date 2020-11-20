@@ -234,8 +234,6 @@ func LoadRegisterLog(reqt data.ReqtData) (resp data.RespData) {
 			rLog, err2 := dbexec.LoadRegisterLog(uID, eID)
 			if err2 == nil {
 
-				log.Println("Step 3")
-
 				step := rLog.Step
 				outData["userId"] = rLog.UserID
 				outData["eventId"] = rLog.EventID
